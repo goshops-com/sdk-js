@@ -11,60 +11,36 @@
         var s = document.createElement('script');
         s.type = 'text/javascript';
         s.async = true;
-        s.src = '/index.js';
+        s.src = 'https://sdk-js.goshops.com/index.js';
         var x = document.getElementsByTagName('script')[0];
         x.parentNode.insertBefore(s, x);
       })();
+
+      gs.init('D_DGTRBQJBBRU',{debug: true});
+
     </script>
 
     <script>
 
       setTimeout(function(){
-        gs.init("ASD");
+        
 
-        gs.session('as');
+        let items = await fetch("https://gist.githubusercontent.com/sjcotto/41334a24c63c42dfd68d2b5bb9fb7514/raw/f9eca896f296749e4a0e7c355a4e347d5fb4e6cb/items.json", {method: 'GET',redirect: 'follow'})
 
-        window.items = [
-            {
-                "id": "72998"
-            },
-            {
-                "id": "67197"
-            },
-            {
-                "id": "77561"
-            },
-            {
-                "id": "68358"
-            },
-            {
-                "id": "79132"
-            },
-            {
-                "id": "103228"
-            },
-            {
-                "id": "72378"
-            },
-            {
-                "id": "85131"
-            },
-            {
-                "id": "94864"
-            },
-            {
-                "id": "68791"
-            },
-            {
-                "id": "93363"
-            },
-            {
-                "id": "112623"
-            }
-          ];
+        console.log(items);
 
+        //re order items
+        items = await gs.rank(items);
 
+        console.log(items);
 
+        gs.feedback('click',{
+          item : 93363
+        })
+
+        items = await gs.rank(items);
+
+        console.log(items);
 
       },1000)
     </script>
