@@ -1,7 +1,8 @@
-# sdk-js
+# GoShops Discover SDK-JS
 
 ## Install
 
+Add the following script into the `header` section of the HTML file.
 
 ```
 <script>
@@ -19,13 +20,19 @@
 
 ## How to use it 
 
-### Start
+### Auth & Init 
+
+In order to use GoShops Discover API, add the token and optional parameters 
 
 ```
     gs.init('D_DGTRBQJBBRU',{debug: true});
 ```
 
-### re-order a list of items - personalize product grid
+### Recommendation APIs
+
+#### Rank 
+
+Assuming there is a product list the rank function will re-order the items based on the user taste, using this the product list is personalized per user.
 
 ```
     const items = [
@@ -69,14 +76,21 @@
     items = await gs.rank(items);
 ```
 
-### recommended page
+#### Recommendation
+
+Without providing a list, this function will perform the following tasks in order. 
+
+1 - Retrive the top 100 items for this user using history data
+2 - Rank the 100 items using recent feedback and context (category or search)
 
 ```
     // TODO
     const items = await gs.retriveAndRank();
 ```
 
-### Send feedback
+#### Send feedback
+
+Every action of the items showed in the Recommendations must be sent using the feedback function, this is super important to imrpove the rank recommendation. 
 
 ```
     gs.feedback('click',{
@@ -92,13 +106,38 @@
           })
 ```
 
-### Set User
+#### Set User
 
 If there is auth, send the userId
 
 ```
     gs.setUser("user-id")
 ```
+
+
+### Search 
+
+#### Insta search 
+
+Instasearch is usefull for auto complete list or fast typing searchs 
+
+```
+  const items = gs.instaSearch('blue dress')
+```
+
+Additional fields 
+
+```
+  const items = gs.instaSearch('blue dress', {
+    filter : ["category = shirt", "proce < 100"]
+    sort: ['price:asc']
+  })
+```
+
+#### Full search 
+
+
+#### Image search 
 
 
 https://github.com/goshops-com/sdk-js/blob/main/test.html
