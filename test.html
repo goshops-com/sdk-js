@@ -16,33 +16,35 @@
         x.parentNode.insertBefore(s, x);
       })();
 
-      gs.init('D_DGTRBQJBBRU',{debug: true});
-
     </script>
 
     <script>
 
-      setTimeout(function(){
+      (async function() {
         
+        setTimeout(async function(){
+          gs.init('D_DGTRBQJBBRU',{debug: true});
 
-        let items = await fetch("https://gist.githubusercontent.com/sjcotto/41334a24c63c42dfd68d2b5bb9fb7514/raw/f9eca896f296749e4a0e7c355a4e347d5fb4e6cb/items.json", {method: 'GET',redirect: 'follow'})
+          let response = await fetch("https://gist.githubusercontent.com/sjcotto/41334a24c63c42dfd68d2b5bb9fb7514/raw/f9eca896f296749e4a0e7c355a4e347d5fb4e6cb/items.json", {method: 'GET',redirect: 'follow'})
+          let items = await response.json();
+          console.log(items);
 
-        console.log(items);
+          //re order items
+          items = await gs.rank(items);
 
-        //re order items
-        items = await gs.rank(items);
+          console.log(items);
 
-        console.log(items);
+          gs.feedback('click',{
+            item : 93363
+          })
 
-        gs.feedback('click',{
-          item : 93363
-        })
+          items = await gs.rank(items);
 
-        items = await gs.rank(items);
+          console.log(items);
+        },1000)
 
-        console.log(items);
+      })();
 
-      },1000)
     </script>
 
   </head>

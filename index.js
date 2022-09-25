@@ -51,7 +51,8 @@ function uuidv4() {
         if (!sessionStorage.getItem(GS_SESSION)){
             sessionStorage.setItem(GS_SESSION, uuidv4())
             gs.log('Init anon session', sessionStorage.getItem(GS_SESSION))
-
+            gs.user = sessionStorage.getItem(GS_SESSION);
+        }else{
             gs.user = sessionStorage.getItem(GS_SESSION);
         }
         
