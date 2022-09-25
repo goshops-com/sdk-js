@@ -75,13 +75,14 @@ function uuidv4() {
         sessionStorage.removeItem(GS_PROPS);
     }
 
-    gs.feeback = function(event, obj){
+    gs.feedback = function(event, obj){
         var raw = JSON.stringify({
-            "event": event,
+            "event": "interaction",
+            "type": event,
             "id": uuidv4(),
             "fields": obj.fields || [],
             "ranking" : gs.ranking,
-            "item": obj.item,
+            "item": obj.item + "",
             "user": gs.user,
             "session": gs.user,
             "timestamp": new Date().getTime()
@@ -92,7 +93,9 @@ function uuidv4() {
             headers: headers,
             body: raw,
             redirect: 'follow'
-        })
+        }).then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
     }
     gs.setUser = function(userId){
         gs.props.user = userId;
@@ -104,10 +107,14 @@ function uuidv4() {
         let id = uuidv4();
         gs.ranking = id;
 
+        let array = [];
+        items.forEach(function(item){
+            array.push(item)
+        })
         var raw = JSON.stringify({
             "event": "ranking",
             "id": id,
-            "items": items,
+            "items": array,
             "user": gs.user,
             "session": gs.user,
             "timestamp": new Date().getTime()
