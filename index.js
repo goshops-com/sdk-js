@@ -129,7 +129,11 @@ function uuidv4() {
                 redirect: 'follow'
             })
             
-            let respJson = response.json()
+            let respJson = await response.json()
+
+            respJson.items = respJson.items.map(function(i){
+                return { id : i.item, score : i.score}
+            })
 
             const rawFeedback = JSON.stringify({
                 "event": "ranking",
@@ -148,7 +152,7 @@ function uuidv4() {
                 redirect: 'follow'
             })
 
-            return respJson;
+            return respJson.items;
 
         }catch(e){
             console.log(e)
