@@ -15,11 +15,11 @@
       })();
 
     </script>
-```js
+```
 
 ## How to use it 
 
-Start session
+### Start session
 
 ```
     gs.init('D_DGTRBQJBBRU',{debug: true});
@@ -31,7 +31,7 @@ Start session
     items = await gs.rank(items);
 ```
 
-Send feedback
+### Send feedback
 
 ```
     gs.feedback('click',{
@@ -39,10 +39,12 @@ Send feedback
           })
 ```
 
-Set User
+### Set User
 
 
 ```
     gs.setUser("user-id")
 ```
+
+https://github.com/goshops-com/sdk-js/blob/main/test.html
 
