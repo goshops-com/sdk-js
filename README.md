@@ -117,6 +117,22 @@ If there is auth, send the userId
 
 ### Search 
 
+#### Load search widget 
+
+Add the div in your html page. 
+
+```
+  <div id='gs_search_widget'/>
+```
+
+Initialize the search widget with the div container identifier, project and other fields. 
+
+```
+gs.loadSearchWidget('gs_search_widget',{
+            project:'YOUR_GS_PROJECT_ID' 
+          })
+
+```
 #### Insta search 
 
 Instasearch is usefull for auto complete list or fast typing searchs 

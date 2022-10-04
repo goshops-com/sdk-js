@@ -1,0 +1,113 @@
+.gs_search_container {
+  position: relative;
+  border-color: #999;  
+}
+
+.gs_search_input {
+  border-left: 0px;
+  border-right: 0px;
+  border-top: 0px;
+  border-bottom: 1px solid  #999;;
+  width: 400px;
+  height: 40px;
+}
+
+.gs_search_input:focus {
+  outline: none;
+  border-bottom: 2px solid  #333;;
+}
+
+.gs_search_input:disabled {
+  background-color: transparent;
+}
+
+.gs_search_camera_button {
+  background-color: transparent;
+  width: 30px;
+  height: 30px;
+  border: 0px;
+  font-weight: 300;
+}
+
+.gs_search_camera_icon {
+  font-size: 15px;
+}
+
+.gs_search_mic_button {
+  background-color: transparent;
+  width: 30px;
+  height: 30px;
+  border: 0px;
+}
+
+.gs_search_mic_icon {
+  font-size: 15px;
+}
+
+.gs_search_insta_result_container {
+  width: 400px;
+  border-radius: 2px;
+  box-shadow: .5rem .5rem 1rem rgba(0, 0, 0, 0.6);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.gs_search_insta_result_item{
+  display: inline-flex;
+  width: 100%;
+  cursor: pointer;
+}
+
+.gs_search_insta_result_item:hover {
+  background-color: #efebea;
+}
+
+.gs_search_insta_result_item_img{
+  height: 50px;
+  margin: 10px
+}
+
+.gs_search_insta_result_item_p{
+  text-decoration: none;
+}
+
+em {
+  color: #0d6efd
+}
+
+.gs_search_img_uploaded{
+  height: 40px; 
+  margin-left: 10px;
+}
+
+.gs_search_img_uploaded_p{
+  max-width: 200px; 
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  height: 40px;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.gs_search_img_uploaded_container{
+  background-color: white; 
+  position: absolute; 
+  display: inline-flex;
+  border-radius: 10px; 
+  top:0px;
+  left: 0px; 
+  height: 40px; 
+  max-width: 80%;
+  border-radius: 1px;
+  box-shadow: .5rem .5rem 1rem rgba(0, 0, 0, 0.3);
+  border-radius: 15px;
+}
+
+.gs_search_stats_container{
+  display: block;
+}
+
+.gs_search_stats_p{
+  display: block;
+} 

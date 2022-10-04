@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>My Website</title>
-
+    <link rel="stylesheet" href="https://sdk-js.goshops.com/styles.css">
     <script>
       (function () {
         var s = document.createElement('script');
@@ -16,7 +16,6 @@
         var x = document.getElementsByTagName('script')[0];
         x.parentNode.insertBefore(s, x);
       })();
-
     </script>
 
     <script>
@@ -26,6 +25,10 @@
         setTimeout(async function(){
           
           gs.init('D_DGTRBQJBBRU',{ debug: true });
+
+          gs.loadSearchWidget('div-123123-1231313',{
+            project:'63321dada1438cf0b7f80896' 
+          })
 
           let response = await fetch("https://gist.githubusercontent.com/sjcotto/41334a24c63c42dfd68d2b5bb9fb7514/raw/f9eca896f296749e4a0e7c355a4e347d5fb4e6cb/items.json", {method: 'GET',redirect: 'follow'})
           let items = await response.json()
@@ -45,6 +48,8 @@
 
           console.log('reorder 2',items);
 
+          
+
         },1000)
 
       })();
@@ -57,5 +62,8 @@
         <h1>Welcome to My Website</h1>  
     </main>
 	<script src="index.js"></script>
+
+  <div id="gs_search_widget"/>
+  
   </body>
 </html>
