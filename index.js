@@ -9,6 +9,135 @@
  * https://github.com/hueitan/javascript-sdk-design
  */
 
+
+/************************** */
+/** Search Widget load **/
+/****************************/
+
+function ShowLoadingSpinner(show){
+    let spinner = document.getElementById('gs_search_loader');
+    spinner.className = show? "gs_loading" : '';
+}
+
+function ShowImageSlideInSlides(element_class, action, event){
+
+    let slideIndex = 0;
+    
+    let slides = document.getElementsByClassName(element_class);
+    
+    let active_slide = Array.from(slides).filter(s=> s.style.display == 'block');
+
+    if(active_slide.length > 0) {
+        slideIndex = parseInt(active_slide[0].id.split('_')[0]);
+    }
+
+    if(action == 'sum' && slideIndex < slides.length -1){
+        slideIndex++;
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        slides[slideIndex].style.display = "block";
+    }
+
+    if(action == 'dec' && slideIndex > 0){
+        slideIndex--;
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        slides[slideIndex].style.display = "block";
+    }
+} 
+
+function onSearchResultMainItemClicked(item,opts){
+    console.log(item);
+
+    if(item.link){
+        window.location.href = item.link;
+    }
+}
+
+function createSearchMainResultItem(search_resullt_main_container,item,opts){
+
+    //REMOVE 
+    item.images = item.imgs;
+
+    let item_main_result_item = document.createElement('div');
+    item_main_result_item.className = 'gs_search_main_result_item_container';
+
+    if(item.images && item.images.length > 0 ){
+        if(item.images.length == 1){
+            const item_img = document.createElement('img');
+            item_img.className = 'gs_search_main_result_item_img';
+            item_img.src = item.images[0].url;
+            
+            item_main_result_item.appendChild(item_img);
+
+        }else{
+            let main_slides_container = document.createElement('div');
+            main_slides_container.className = 'gs_search_images_slideshow-container';
+
+            for(let i=0; i < item.images.length;  i++) {
+                let img_slide_container = document.createElement('div');
+                img_slide_container.className = `gs_search_images_slide gs_fade gs_search_images_slide_${item.id}`;
+                img_slide_container.id = `${i}_gs_search_images_slide_${item.id}`
+
+                if(i==0){
+                    img_slide_container.style.display = 'block';
+                }
+
+                let img_slide = document.createElement('img');
+                img_slide.className = 'gs_search_main_result_item_img';
+                img_slide.src = item.images[i].url;
+                  
+
+                img_slide_container.appendChild(img_slide);
+
+                main_slides_container.appendChild(img_slide_container);
+            }
+
+            let gs_prev = document.createElement('a');
+            gs_prev.className = 'gs_prev';
+            gs_prev.innerHTML = '&#10094;'
+            
+
+            gs_prev.addEventListener('click', (evt) => ShowImageSlideInSlides(`gs_search_images_slide_${item.id}`,'dec',evt), false);
+
+            let gs_next = document.createElement('a');
+            gs_next.className = 'gs_next';
+            gs_next.innerHTML = '&#10095;'
+
+            gs_next.addEventListener('click', (evt) => ShowImageSlideInSlides(`gs_search_images_slide_${item.id}`,'sum',evt), false);
+
+            main_slides_container.appendChild(gs_prev);
+            main_slides_container.appendChild(gs_next);
+
+            item_main_result_item.appendChild(main_slides_container);
+            
+        }
+    }else{
+        const item_img = document.createElement('img');
+        item_img.className = 'gs_search_main_result_item_img_not_found';
+        item_main_result_item.appendChild(item_img);
+    
+    }
+    
+    const item_name_p = document.createElement('p');
+    item_name_p.className = 'gs_search_main_result_item_name_p';
+    item_name_p.innerHTML = item.name;
+
+    item_main_result_item.appendChild(item_name_p);
+
+    const item_price_p = document.createElement('p');
+    item_price_p.className = 'gs_search_main_result_item_price_p';
+    item_price_p.innerHTML = `$ ${item.price}`;
+
+    item_main_result_item.appendChild(item_price_p);
+
+    item_main_result_item.addEventListener('mousedown', (evt) => onSearchResultMainItemClicked(item,opts), false);
+    
+    search_resullt_main_container.appendChild(item_main_result_item);
+}
+
 function debounce(func, delay = 250) {
     let timerId;
     return (...args) => {
@@ -56,11 +185,10 @@ function initSearchStats(opts){
 }
 
 function onSearchInstaResultItemClicked(item, opts){
-    let input = document.getElementById(`gs_search_input_${opts.project}`);
-    input.value = item.name;
-
     initInstaSearchResults(opts);
-    input.blur();
+    if(item.link){
+        window.location.href=item.link;
+    }
 }
 
 function createInstaSearchResultItem(parent,item, opts){
@@ -69,9 +197,15 @@ function createInstaSearchResultItem(parent,item, opts){
     item_insta_result_item.className = 'gs_search_insta_result_item';
     
     const item_img = document.createElement('img');
-    item_img.className = 'gs_search_insta_result_item_img';
-    item_img.src = item.images && item.images.length > 0 ? item.images[0].url : '';
 
+    if(item.images && item.images.length > 0) {
+        item_img.className = 'gs_search_insta_result_item_img';
+        item_img.src = item.images && item.images.length > 0 ? item.images[0].url : '';
+    } 
+    else {
+        item_img.className = 'gs_search_insta_result_item_img_not_found';
+    }
+    
     item_insta_result_item.appendChild(item_img);
 
     const item_p = document.createElement('p');
@@ -112,7 +246,9 @@ function invokeImageSearch(file,opts){
 }
 
 function invokeNeuralSearch(text,opts){
-    const url = `${opts.url}/search/${opts.project}?input=${text}&pipelines=neural`;
+
+    ShowLoadingSpinner(true);
+    const url = `${opts.url}/search/${opts.project}?input=${text}&pipelines=instant`;
 
     const params = {
         headers: {
@@ -127,16 +263,25 @@ function invokeNeuralSearch(text,opts){
             initInstaSearchResults(opts);
             if(data && data.hits){
                 console.log('neural',data);
+                initSearchStats(opts);
 
+                loadSearchStats({
+                    processingTimeMs: data.processingTimeMs,
+                    estimatedTotalHits: data.estimatedTotalHits
+                },opts)
+
+                const main_result_container = document.getElementById(`gs_search_results_main_container_${opts.project}`);
                 for (let i=0; i < data.hits.length; i++){
+                    createSearchMainResultItem(main_result_container, data.hits[i], opts)
                 }
+
             }
         })
         .catch((e) => {
             console.log('error neural: ', e);
         })
         .finally(() => {
-        
+            ShowLoadingSpinner(false);
         });
 }
 
@@ -161,7 +306,6 @@ function invokeInstantSearch(text,opts){
                 let insta_result_container = document.getElementById(`gs_search_insta_result_container_${opts.project}`);
 
                 for (let i=0; i < data.hits.length; i++){
-                    console.log(i);
                     createInstaSearchResultItem(insta_result_container, data.hits[i], opts)
                 }
             }
@@ -173,7 +317,6 @@ function invokeInstantSearch(text,opts){
         
         });
 }
-
 
 function onSearchInputKeydown(event) {
     
@@ -192,8 +335,7 @@ function onSearchInputBlur(event,opts){
 }
 
 function onSearchInputFocus(event,opts){
-    console.log('focus');
-
+    
     if(event.srcElement.value!='') {
         invokeInstantSearch(event.srcElement.value,opts);
     }
@@ -203,6 +345,7 @@ function onSearchInputOnChange(event,opts){
     if(event.srcElement.value!='') {
         invokeInstantSearch(event.srcElement.value,opts);
     }else{
+        initSearchStats(opts);
         initInstaSearchResults(opts);
     }
 }
@@ -302,7 +445,6 @@ function createSearchWidget(id,opts){
 
     search_container.appendChild(div_search_img);
 
-
     // search camera button
     var camera_button = document.createElement('button');
     camera_button.className = 'gs_search_camera_button';
@@ -351,7 +493,24 @@ function createSearchWidget(id,opts){
 
     div.appendChild(stats_container);
 
+    let spinner = document.createElement('div');
+    spinner.id = 'gs_search_loader';
+    
+    div.appendChild(spinner);
+
+    // Results main container
+    var results_main_container = document.createElement('div');
+    results_main_container.className = 'gs_search_results_main_container';
+    results_main_container.id = `gs_search_results_main_container_${opts.project}`;
+
+    div.appendChild(results_main_container);
+
 }
+
+
+/*********************************/
+/** End Search Widget creation **/
+/*******************************/
 
 function uuidv4() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -375,8 +534,11 @@ function uuidv4() {
         }
     }
 
-    const RECO_URL = 'https://go-search-api.dev.goshops.com/reco/';
-    const SEARCH_URL = 'https://go-search-api.dev.goshops.com';
+    //const RECO_URL = 'https://go-search-api.dev.goshops.com/reco/';
+    //const SEARCH_URL = 'https://go-search-api.dev.goshops.com';
+
+    const RECO_URL = 'http://localhost:3000/reco/';
+    const SEARCH_URL = 'http://localhost:3000';
 
     const GS_SESSION = 'gs-session';
     const GS_PROPS = 'gs-props';
@@ -413,7 +575,6 @@ function uuidv4() {
             return {};
         }
     }
-
 
     gs.reset = function(){
         sessionStorage.removeItem(GS_SESSION);
