@@ -14,6 +14,60 @@
 /** Search Widget load **/
 /****************************/
 
+
+function executeSpeechToText(evt, opts){
+
+
+    var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+    var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList;
+    var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
+
+    var recognition = new SpeechRecognition();
+    var speechRecognitionList = new SpeechGrammarList();
+    //speechRecognitionList.addFromString(grammar, 1);
+    recognition.grammars = speechRecognitionList;
+    recognition.lang = 'es-ES';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    
+    let mic_button = document.getElementById(`gs_search_mic_button_${opts.project}`);
+    mic_button.classList.add('fa-beat');
+    recognition.start();
+
+    recognition.onresult = function(event) {
+        // The SpeechRecognitionEvent results property returns a SpeechRecognitionResultList object
+        // The SpeechRecognitionResultList object contains SpeechRecognitionResult objects.
+        // It has a getter so it can be accessed like an array
+        // The first [0] returns the SpeechRecognitionResult at position 0.
+        // Each SpeechRecognitionResult object contains SpeechRecognitionAlternative objects that contain individual results.
+        // These also have getters so they can be accessed like arrays.
+        // The second [0] returns the SpeechRecognitionAlternative at position 0.
+        // We then return the transcript property of the SpeechRecognitionAlternative object 
+        var speechResult = event.results[0][0].transcript.toLowerCase();
+        
+        if(event.results[0][0].confidence > 0.6){
+            let input = document.getElementById(`gs_search_input_${opts.project}`);
+            input.value = event.results[0][0].transcript.toLowerCase();
+            input.focus();
+        }
+
+        let mic_button = document.getElementById(`gs_search_mic_button_${opts.project}`);
+        mic_button.classList.remove('fa-beat');
+
+        console.log('Confidence: ' + event.results[0][0].confidence);
+      }
+    
+      recognition.onspeechend = function() {
+        mic_button.classList.remove('fa-beat');
+        recognition.stop();
+      }
+    
+      recognition.onerror = function(event) {
+        mic_button.classList.remove('fa-beat');
+        console.log('Recognition errror: ' + JSON.stringify(event));
+      }
+}
+
 function ShowLoadingSpinner(show){
     let spinner = document.getElementById('gs_search_loader');
     spinner.className = show? "gs_loading" : '';
@@ -199,7 +253,7 @@ function onSearchInstaResultItemClicked(item, opts){
 function createInstaSearchResultItem(parent,item, opts){
     
     item.images = item.imgs;
-    
+
     let item_insta_result_item = document.createElement('div');
     item_insta_result_item.className = 'gs_search_insta_result_item';
     
@@ -423,7 +477,7 @@ function onSearchImageRemoveUploaded(event,opts){
 function createSearchWidget(id,opts){
 
     loadFontAwesomeLibrary();
-
+    
     // create main container
     let div = document.getElementById(id);
     var search_container = document.createElement('div');
@@ -497,10 +551,16 @@ function createSearchWidget(id,opts){
     // search microphone button
     var mic_button = document.createElement('button');
     mic_button.className = 'gs_search_mic_button';
+    mic_button.id = `gs_search_mic_button_${opts.project}`;
     var mic_icon = document.createElement('i');
     mic_icon.className = 'fa fa-microphone gs_search_mic_icon';
     mic_button.appendChild(mic_icon);
     
+    
+
+    mic_button.addEventListener('click', (evt) => executeSpeechToText(evt,opts) , false);
+    
+
     search_container.appendChild(mic_button);
 
     // instant search results container

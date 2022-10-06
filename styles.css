@@ -27,6 +27,7 @@
   height: 30px;
   border: 0px;
   font-weight: 300;
+  cursor: pointer;
 }
 
 .gs_search_camera_icon {
@@ -38,6 +39,16 @@
   width: 30px;
   height: 30px;
   border: 0px;
+  cursor: pointer;
+}
+
+.gs_search_mic_pressing_button {
+  background-color: transparent;
+  width: 30px;
+  height: 30px;
+  border: 0px;
+  cursor: pointer;
+  
 }
 
 .gs_search_mic_icon {
