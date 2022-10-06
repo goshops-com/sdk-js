@@ -134,7 +134,7 @@ function createSearchMainResultItem(search_resullt_main_container,item,opts){
     item_main_result_item.appendChild(item_price_p);
 
     item_main_result_item.addEventListener('mousedown', (evt) => onSearchResultMainItemClicked(item,opts), false);
-    
+
     search_resullt_main_container.appendChild(item_main_result_item);
 }
 
@@ -171,6 +171,11 @@ function loadFontAwesomeLibrary(){
 
 function initInstaSearchResults(opts){
     const myNode = document.getElementById(`gs_search_insta_result_container_${opts.project}`);
+    myNode.innerHTML = '';
+}
+
+function initSearchMainResults(opts){
+    const myNode = document.getElementById(`gs_search_results_main_container_${opts.project}`);
     myNode.innerHTML = '';
 }
 
@@ -220,6 +225,8 @@ function createInstaSearchResultItem(parent,item, opts){
 }
 
 function invokeImageSearch(file,opts){
+
+    ShowLoadingSpinner(true);
     let formData = new FormData();
     formData.append('uploaded_file', file);
 
@@ -233,22 +240,35 @@ function invokeImageSearch(file,opts){
     fetch(url, params)
         .then((r) => r.json())
         .then((data) => {
+            initInstaSearchResults(opts);
+            initSearchMainResults(opts);
             if(data){
                 console.log(data);
+                initSearchStats(opts);
+                loadSearchStats({
+                    processingTimeMs: data.processingTimeMs,
+                    estimatedTotalHits: data.estimatedTotalHits
+                },opts)
+
+                const main_result_container = document.getElementById(`gs_search_results_main_container_${opts.project}`);
+                for (let i=0; i < data.hits.length; i++){
+                    createSearchMainResultItem(main_result_container, data.hits[i], opts)
+                }
+
             }
         })
         .catch((e) => {
         console.log('image search error',e);
         })
         .finally(() => {
-        
+            ShowLoadingSpinner(false);
     });
 }
 
 function invokeNeuralSearch(text,opts){
 
     ShowLoadingSpinner(true);
-    const url = `${opts.url}/search/${opts.project}?input=${text}&pipelines=instant`;
+    const url = `${opts.url}/search/${opts.project}?input=${text}&pipelines=neural,instant`;
 
     const params = {
         headers: {
@@ -261,6 +281,7 @@ function invokeNeuralSearch(text,opts){
         .then((r) => r.json())
         .then((data) => {
             initInstaSearchResults(opts);
+            initSearchMainResults(opts);
             if(data && data.hits){
                 console.log('neural',data);
                 initSearchStats(opts);
@@ -299,6 +320,7 @@ function invokeInstantSearch(text,opts){
         .then((r) => r.json())
         .then((data) => {
             initInstaSearchResults(opts);
+            initSearchMainResults(opts);
 
             if(data && data.hits){
                 console.log('instant',data);
@@ -347,6 +369,7 @@ function onSearchInputOnChange(event,opts){
     }else{
         initSearchStats(opts);
         initInstaSearchResults(opts);
+        initSearchMainResults(opts);
     }
 }
 
@@ -389,6 +412,10 @@ function onSearchImageRemoveUploaded(event,opts){
     imgContainer.style.display = 'none';
     img.src = '';
     p.innerHTML = '';
+
+    initInstaSearchResults(opts);
+    initSearchStats(opts);
+    initSearchMainResults(opts);
 }
 
 function createSearchWidget(id,opts){
@@ -534,11 +561,11 @@ function uuidv4() {
         }
     }
 
-    //const RECO_URL = 'https://go-search-api.dev.goshops.com/reco/';
-    //const SEARCH_URL = 'https://go-search-api.dev.goshops.com';
+    const RECO_URL = 'https://go-search-api.dev.goshops.com/reco/';
+    const SEARCH_URL = 'https://go-search-api.dev.goshops.com';
 
-    const RECO_URL = 'http://localhost:3000/reco/';
-    const SEARCH_URL = 'http://localhost:3000';
+    //const RECO_URL = 'http://localhost:3000/reco/';
+    //const SEARCH_URL = 'http://localhost:3000';
 
     const GS_SESSION = 'gs-session';
     const GS_PROPS = 'gs-props';
