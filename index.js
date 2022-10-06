@@ -102,10 +102,10 @@ function ShowImageSlideInSlides(element_class, action, event){
     }
 } 
 
-function onSearchResultMainItemClicked(item,opts){
-    console.log(item);
+function onSearchResultMainItemClicked(evt,item,opts){
+    console.log(evt.srcElement.classList.contains ('gs_search_next'));
 
-    if(item.link){
+    if(item.link && !evt.srcElement.classList.contains ('gs_search_next') && !evt.srcElement.classList.contains ('gs_search_prev')){
         window.location.href = item.link;
     }
 }
@@ -150,14 +150,14 @@ function createSearchMainResultItem(search_resullt_main_container,item,opts){
             }
 
             let gs_prev = document.createElement('a');
-            gs_prev.className = 'gs_prev';
+            gs_prev.className = 'gs_search_prev';
             gs_prev.innerHTML = '&#10094;'
             
 
             gs_prev.addEventListener('click', (evt) => ShowImageSlideInSlides(`gs_search_images_slide_${item.id}`,'dec',evt), false);
 
             let gs_next = document.createElement('a');
-            gs_next.className = 'gs_next';
+            gs_next.className = 'gs_search_next';
             gs_next.innerHTML = '&#10095;'
 
             gs_next.addEventListener('click', (evt) => ShowImageSlideInSlides(`gs_search_images_slide_${item.id}`,'sum',evt), false);
@@ -187,7 +187,7 @@ function createSearchMainResultItem(search_resullt_main_container,item,opts){
 
     item_main_result_item.appendChild(item_price_p);
 
-    item_main_result_item.addEventListener('mousedown', (evt) => onSearchResultMainItemClicked(item,opts), false);
+    item_main_result_item.addEventListener('mousedown', (evt) => onSearchResultMainItemClicked(evt, item,opts), false);
 
     search_resullt_main_container.appendChild(item_main_result_item);
 }

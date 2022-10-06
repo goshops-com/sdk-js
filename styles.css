@@ -166,7 +166,7 @@ em {
   to {opacity: 1}
 }
 
-.gs_prev, .gs_next {
+.gs_search_prev, .gs_search_next {
   cursor: pointer;
   position: absolute;
   top: 50%;
@@ -182,13 +182,13 @@ em {
 }
 
 /* Position the "next button" to the right */
-.gs_next {
+.gs_search_next {
   right: 0;
   border-radius: 3px 0 0 3px;
 }
 
 /* On hover, add a black background color with a little bit see-through */
-.gs_prev:hover, .gs_next:hover {
+.gs_search_prev:hover, .gs_next:hover {
   background-color: rgba(0,0,0,0.8);
 }
 
