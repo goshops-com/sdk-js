@@ -198,6 +198,8 @@ function onSearchInstaResultItemClicked(item, opts){
 
 function createInstaSearchResultItem(parent,item, opts){
     
+    item.images = item.imgs;
+    
     let item_insta_result_item = document.createElement('div');
     item_insta_result_item.className = 'gs_search_insta_result_item';
     
