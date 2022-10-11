@@ -11,9 +11,40 @@
 
 
 /************************** */
-/** Search Widget load **/
+/** Recommendation Widget load **/
 /****************************/
 
+function ShowRecoLoadingSpinner(id,show){
+    let spinner = document.getElementById(id);
+    spinner.className = show? "gs_loading" : '';
+}
+
+function createRecommendationItem(reco_main_container,item,opts){
+
+}
+
+function createRecommendationWidget(id,opts){
+    // create main container
+    let div = document.getElementById(id);
+    var reco_container = document.createElement('div');
+    reco_container.className = 'gs_reco_container';
+    reco_container.id = `gs_reco_container_${opts.scenario}`;
+    
+    let spinner = document.createElement('div');
+    spinner.id = `gs_reco_loader_${opts.scenario}`;
+    
+    div.appendChild(spinner);
+    div.appendChild(reco_container);
+}
+
+/************************** */
+/** End Recommendation Widget load **/
+/****************************/
+
+
+/************************** */
+/** Search Widget load **/
+/****************************/
 
 function executeSpeechToText(evt, opts){
 
@@ -556,11 +587,8 @@ function createSearchWidget(id,opts){
     mic_icon.className = 'fa fa-microphone gs_search_mic_icon';
     mic_button.appendChild(mic_icon);
     
-    
-
     mic_button.addEventListener('click', (evt) => executeSpeechToText(evt,opts) , false);
     
-
     search_container.appendChild(mic_button);
 
     // instant search results container
@@ -625,9 +653,6 @@ function uuidv4() {
 
     const RECO_URL = 'https://go-search-api.dev.goshops.com/reco/';
     const SEARCH_URL = 'https://go-search-api.dev.goshops.com';
-
-    //const RECO_URL = 'http://localhost:3000/reco/';
-    //const SEARCH_URL = 'http://localhost:3000';
 
     const GS_SESSION = 'gs-session';
     const GS_PROPS = 'gs-props';
@@ -754,6 +779,72 @@ function uuidv4() {
         }
     }
 
+    gs.combinedSearch= async function(text,opts){
+        if (!opts) opts = {}
+
+        if(!opts.url)
+            opts.url = SEARCH_URL;
+        
+        const url = `${opts.url}/search/${opts.project}?input=${text}&pipelines=instant,neural`;
+
+        const params = {
+            headers: {
+                "content-type":"application/json; charset=UTF-8",
+            },
+            method: 'GET',
+        };
+        
+        const response = await fetch(url, params)
+
+        let respJson = await response.json()
+
+        return respJson;
+    }
+
+    gs.neuralSearch = async function(text,opts){
+        if (!opts) opts = {}
+
+        if(!opts.url)
+            opts.url = SEARCH_URL;
+        
+        const url = `${opts.url}/search/${opts.project}?input=${text}&pipelines=neural`;
+
+        const params = {
+            headers: {
+                "content-type":"application/json; charset=UTF-8",
+            },
+            method: 'GET',
+        };
+        
+        const response = await fetch(url, params)
+
+        let respJson = await response.json()
+
+        return respJson;
+    }
+    
+    gs.instantSearch = async function(text,opts){
+        if (!opts) opts = {}
+
+        if(!opts.url)
+            opts.url = SEARCH_URL;
+        
+        const url = `${opts.url}/search/${opts.project}?input=${text}&pipelines=instant`;
+
+        const params = {
+            headers: {
+                "content-type":"application/json; charset=UTF-8",
+            },
+            method: 'GET',
+        };
+        
+        const response = await fetch(url, params)
+
+        let respJson = await response.json()
+
+        return respJson.hits;
+    }
+
     gs.loadSearchWidget = function(widget,opts){
         if (!opts) opts = {}
 
@@ -761,6 +852,15 @@ function uuidv4() {
             opts.url = SEARCH_URL;
         
         createSearchWidget(widget, opts);
+    }
+
+    gs.loadRecommendationWidget = function(widget,opts){
+        if (!opts) opts = {}
+
+        if(!opts.url)
+            opts.url = RECO_URL;
+        
+        createRecommendationWidget(widget, opts);
     }
 
     window.gs = gs;
