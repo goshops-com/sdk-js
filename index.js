@@ -845,6 +845,30 @@ function uuidv4() {
         return respJson.hits;
     }
 
+    gs.imageSearch = async function(file, opts) {
+        if (!opts) opts = {}
+
+        if(!opts.url)
+            opts.url = SEARCH_URL;
+
+        let formData = new FormData();
+        formData.append('uploaded_file', file);
+
+        const url = `${opts.url}/image-search/${opts.project}`;
+
+        const params = {
+            headers: {},
+            method: 'POST',
+            body : formData 
+        };
+        
+        const response = await fetch(url, params)
+
+        let respJson = await response.json()
+
+        return respJson;
+    }
+
     gs.loadSearchWidget = function(widget,opts){
         if (!opts) opts = {}
 
