@@ -93,16 +93,46 @@ Without providing a list, this function will perform the following tasks in orde
 Every action of the items showed in the Recommendations must be sent using the feedback function, this is super important to imrpove the rank recommendation. 
 
 ```
+    gs.feedback('view',{
+            project: "YOUR_PROJECT_ID",
+            item : "93363",
+            customer: "12313123",
+            reco_id:"21312313",
+            search_id: "123123"
+          })
+          
     gs.feedback('click',{
-            item : "93363"
+            project: "YOUR_PROJECT_ID",
+            item : "93363",
+            customer: "12313123",
+            reco_id:"21312313",
+            search_id: "123123"
           })
 
     gs.feedback('like',{
-            item : "93363"
+            project: "YOUR_PROJECT_ID",
+            item : "93363",
+            customer: "12313123",
+            reco_id:"21312313",
+            search_id: "123123"
           })
-
+          
+  gs.feedback('cart',{
+      project: "YOUR_PROJECT_ID", 
+      item : "93363",
+      customer: "12313123",
+      reco_id:"21312313",
+      search_id: "123123"
+      
+    })
+          
     gs.feedback('purchase',{
-            item : "93363"
+            project: "YOUR_PROJECT_ID",
+            item : "93363",
+            orderid : "123213",
+            customer: "12313123",
+            reco_id:"21312313",
+            search_id: "123123"
           })
 ```
 
