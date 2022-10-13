@@ -92,13 +92,16 @@ Without providing a list, this function will perform the following tasks in orde
 
 Every action of the items showed in the Recommendations must be sent using the feedback function, this is super important to imrpove the rank recommendation. 
 
+
 ```
     gs.feedback('view',{
             project: "YOUR_PROJECT_ID",
             item : "93363",
             customer: "12313123",
             reco_id:"21312313",
-            search_id: "123123"
+            search_id: "123123",
+            fields: [],
+            "timestamp": new Date().getTime()
           })
           
     gs.feedback('click',{
@@ -106,7 +109,9 @@ Every action of the items showed in the Recommendations must be sent using the f
             item : "93363",
             customer: "12313123",
             reco_id:"21312313",
-            search_id: "123123"
+            search_id: "123123",
+            fields: [],
+            "timestamp": new Date().getTime()
           })
 
     gs.feedback('like',{
@@ -114,7 +119,9 @@ Every action of the items showed in the Recommendations must be sent using the f
             item : "93363",
             customer: "12313123",
             reco_id:"21312313",
-            search_id: "123123"
+            search_id: "123123",
+            fields: [],
+            "timestamp": new Date().getTime()
           })
           
   gs.feedback('cart',{
@@ -122,7 +129,9 @@ Every action of the items showed in the Recommendations must be sent using the f
       item : "93363",
       customer: "12313123",
       reco_id:"21312313",
-      search_id: "123123"
+      search_id: "123123",
+      fields: [],
+      "timestamp": new Date().getTime()
       
     })
           
@@ -133,9 +142,17 @@ Every action of the items showed in the Recommendations must be sent using the f
             customer: "12313123",
             reco_id:"21312313",
             search_id: "123123"
+            fields: [],
+            "timestamp": new Date().getTime()
           })
 ```
 
+*OBS:*
+
+  - **reco_id** and **search_id** are optional. They 'll be used when the event is a result of a search or a recommendation. 
+  - **fields** is optional and will be used for custom data
+  - **customer** is optional, if is not present in opts the gs.user will be used 
+  
 #### Set User
 
 If there is auth, send the userId
