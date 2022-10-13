@@ -53,7 +53,20 @@
           console.log('reorder',items);
 
           gs.feedback('click',{
+            project: "1313123",
             item : "93363"
+          })
+
+          gs.feedback('view',{
+            project: "1313123",
+            item : "93363",
+            user: "12313"
+          })
+
+          gs.feedback('purchase',{
+            project: "1313123",
+            item : "93363",
+            user: "12313"
           })
 
           items = await gs.rank(items);

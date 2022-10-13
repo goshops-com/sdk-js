@@ -696,6 +696,21 @@ function uuidv4() {
     }
 
     gs.feedback = function(event, obj){
+        let body = {
+            project: obj.project,
+            event : event,
+            data: obj
+        }
+
+        fetch(RECO_URL + "feedback", {
+            method: 'POST',
+            headers: headers,
+            body
+        }).then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+    }
+    /*gs.feedback = function(event, obj){
         var raw = JSON.stringify({
             "event": "interaction",
             "type": event,
@@ -716,7 +731,8 @@ function uuidv4() {
         }).then(response => response.text())
         .then(result => console.log(result))
         .catch(error => console.log('error', error));
-    }
+    }*/
+
     gs.setUser = function(userId){
         gs.props.user = userId;
         gs.save();
