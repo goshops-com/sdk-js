@@ -6,13 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>My Website</title>
     <link rel="stylesheet" href="https://sdk-js.goshops.com/styles.css">
+    <!-- <link rel="stylesheet" href="./styles.css"> -->
     <script>
       (function () {
         var s = document.createElement('script');
         s.type = 'text/javascript';
         s.async = true;
         s.src = 'https://sdk-js.goshops.com/index.js';
-        //s.src = '/index.js';
+        // s.src = './index.js';
         var x = document.getElementsByTagName('script')[0];
         x.parentNode.insertBefore(s, x);
       })();
@@ -86,7 +87,30 @@
     </main>
 	<script src="index.js"></script>
 
-  <div id="gs_search_widget"/>
+  <div id="gs_search_widget"></div>
+
+  <div id="i_frame" class="i_frame">
+    <button id="i_frame_expand" class="i_frame_expand">
+      <svg fill="none" viewbox="0 0 27 16" xmlns="http://www.w3.org/2000/svg" width="27" heigth="16" stroke="rgba(0, 0, 0, 0.3)" stroke-width="0.5">
+        <path d="M 2 15 L 14 2 L 26 15" stroke="white" stroke-width="2"></path>
+      </svg>
+    </button>
+    <button id="i_frame_minimize" class="i_frame_minimize">
+      <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24" stroke="rgba(0, 0, 0, 0.3)" stroke-width="0.5">
+        <path fill-rule="evenodd" d="M 4.5 9.58 a 0.75 0.75 0 1 1 1.06 -1.06 L 12 14.959 l 6.44 -6.44 A 0.75 0.75 0 0 1 19.5 9.58 l -6.97 6.97 a 0.75 0.75 0 0 1 -1.06 0 L 4.5 9.58 Z"></path>
+      </svg>
+    </button>
+    <button id="i_frame_close" class="i_frame_close">
+      <svg viewbox="0 0 17 17" xmlns="http://www.w3.org/2000/svg" width="17" height="17">
+        <path d="M 16 16 L 1 1" stroke="white" stroke-width="2"></path>
+        <path d="M 1 16 L 16 1" stroke="white" stroke-width="2"></path>
+      </svg>
+    </button>
+  </div>
+  <button id="i_frame_handler">TESTING I-FRAME</button>
+  <!-- <div id="i_frame_container" class="i_frame_container" draggable ondragover="">
+    <iframe src="https://www.youtube.com/embed/yAEOD6I9BPE" class="i_frame"></iframe>
+  </div> -->
   
   </body>
 </html>

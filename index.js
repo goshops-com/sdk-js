@@ -624,6 +624,182 @@ function createSearchWidget(id,opts){
 
 }
 
+const closeIFrameDiv = () => {
+    const iFrameDiv = document.getElementById("i_frame");
+
+    // btns
+    const minimizeIFrame = document.getElementById("i_frame_minimize");
+    minimizeIFrame.style.display = "none";
+    const iFrameCloseBtn = document.getElementById("i_frame_close");
+    iFrameCloseBtn.style.display = "none";
+    const iFrameExpand = document.getElementById("i_frame_expand");
+    iFrameExpand.style.display = "none";
+
+    iFrameDiv.style.width = "0px";
+    iFrameDiv.style.height = "0px";
+}
+
+const smallIFrame = (h, w) => {
+    // draggable i-frame
+    const iFrameDiv = document.getElementById("i_frame");
+    const mobile = window.innerWidth <= 481;
+    let offsetX, offsetY;
+    let leftRef = 0;
+    let topRef = 0;
+    const windowW = Math.floor(window.innerWidth);
+    const windowH = Math.floor(window.innerHeight);
+    const edgeSpacing = 16;
+    const move = (e) => {
+        iFrameDiv.style.transition = "height .5s, width .5s";
+        let axiosX, axiosY;
+        if (!mobile) {
+            axiosX = e.clientX;
+            axiosY = e.clientY;
+        } else {
+            axiosX = e.touches[0].clientX;
+            axiosY = e.touches[0].clientY;
+        }
+
+        // x
+        if (axiosX - offsetX < 0) leftRef = 0;
+        else if (axiosX - offsetX >= windowW - w) {
+            leftRef = windowW - w;
+        } else {
+            leftRef = axiosX - offsetX;
+        }
+
+        // y
+        if (axiosY - offsetY < 0) topRef = 0;
+        else if (windowH - h < axiosY - offsetY) {
+            topRef = windowH - h;
+        } else {
+            topRef = axiosY - offsetY;
+        }
+
+        iFrameDiv.style.left = `${leftRef}px`;
+        iFrameDiv.style.top = `${topRef}px`;
+    }
+    const endMove = () => {
+        iFrameDiv.style.transition = "left .5s, top .5s, height .5s, width .5s";
+        if (leftRef <= edgeSpacing) {
+            iFrameDiv.style.left = `${edgeSpacing}px`;
+        }
+        if (topRef <= edgeSpacing) {
+            iFrameDiv.style.top = `${edgeSpacing}px`;
+        }
+        if (topRef + h >= windowH - edgeSpacing) {
+            iFrameDiv.style.top = `${windowH - (h + edgeSpacing)}px`;
+        }
+        if (leftRef + w >= windowW - edgeSpacing) {
+            iFrameDiv.style.left = `${windowW - (w + edgeSpacing)}px`;
+        }
+        if (leftRef + (w / 2) <= windowW / 2) {
+            iFrameDiv.style.left = `${edgeSpacing}px`;
+        } else {
+            iFrameDiv.style.left = `${windowW - (w + edgeSpacing)}px`;
+        }
+
+        iFrameDiv.removeEventListener("mousemove", move);
+        iFrameDiv.removeEventListener("touchmove", move);
+    }
+    const mouseDownFunction = (e) => {
+        offsetX = e.clientX - iFrameDiv.offsetLeft;
+        offsetY = e.clientY - iFrameDiv.offsetTop;
+        iFrameDiv.addEventListener("mousemove", move);
+    }
+    const touchStartFunction = (e) => {
+        offsetX = e.touches?.[0].clientX - iFrameDiv.offsetLeft;
+        offsetY = e.touches?.[0].clientY - iFrameDiv.offsetTop;
+        iFrameDiv.addEventListener("touchmove", move);
+    }
+    iFrameDiv.addEventListener("mousedown", mouseDownFunction);
+    iFrameDiv.addEventListener("mouseup", endMove);
+    iFrameDiv.addEventListener("touchstart", touchStartFunction);
+    iFrameDiv.addEventListener("touchend", endMove);
+
+    const removeMouseListeners = () => {
+        iFrameDiv.removeEventListener("mousedown", mouseDownFunction);
+        iFrameDiv.removeEventListener("mousemove", move);
+        iFrameDiv.removeEventListener("mouseup", endMove);
+        iFrameDiv.removeEventListener("touchstart", touchStartFunction);
+        iFrameDiv.removeEventListener("touchmove", move);
+        iFrameDiv.removeEventListener("touchend", endMove);
+    }
+
+    // btns
+    const minimizeIFrame = document.getElementById("i_frame_minimize");
+    minimizeIFrame.style.display = "none";
+    const iFrameCloseBtn = document.getElementById("i_frame_close");
+    iFrameCloseBtn.style.display = "flex";
+    const iFrameExpand = document.getElementById("i_frame_expand");
+    iFrameExpand.style.display = "flex";
+    iFrameCloseBtn.addEventListener("click", () => {
+        iFrameDiv.style.transition = "height .5s, width .5s";
+        removeMouseListeners();
+        closeIFrameDiv();
+    });
+    iFrameExpand.addEventListener("click", () => {
+        iFrameDiv.style.transition = "height .5s, width .5s";
+        removeMouseListeners();
+        bigIFrame();
+    });
+}
+
+const bigIFrame = () => {
+    const iFrameDiv = document.getElementById("i_frame");
+    const mobile = window.innerWidth <= 481;
+
+    // btns
+    const iFrameCloseBig = document.getElementById("i_frame_minimize");
+    iFrameCloseBig.style.display = "flex";
+    const iFrameCloseBtn = document.getElementById("i_frame_close");
+    iFrameCloseBtn.style.display = "none";
+    const iFrameExpand = document.getElementById("i_frame_expand");
+    iFrameExpand.style.display = "none";
+
+    const fullH = window.innerHeight;
+    const fullW = window.innerWidth;
+    iFrameCloseBig.addEventListener("click", () => {
+        const iFrameHeight = Math.floor(fullH * .45);
+        const iFrameWidth = Math.floor(iFrameHeight * .56);
+        iFrameDiv.style.height = `${iFrameHeight}px`;
+        iFrameDiv.style.width = `${iFrameWidth}px`;
+        iFrameDiv.style.maxHeight = "320px";
+        iFrameDiv.style.maxWidth = "180px";
+        iFrameDiv.style.borderRadius = "8px";
+        iFrameDiv.style.transform = "translate(0, 0)";
+        iFrameDiv.style.bottom = "16px";
+        iFrameDiv.style.right = "16px";
+        iFrameDiv.style.left = "unset"
+        smallIFrame(iFrameHeight, iFrameWidth);
+    });
+
+    if (mobile) {
+        iFrameDiv.style.height = `${fullH}px`;
+        iFrameDiv.style.width = `${fullW}px`;
+        iFrameDiv.style.maxHeight = "unset";
+        iFrameDiv.style.maxWidth = "unset";
+        iFrameDiv.style.borderRadius = "0px";
+        iFrameDiv.style.transform = "translate(0, 0)";
+        iFrameDiv.style.bottom = "unset";
+        iFrameDiv.style.right = "unset";
+        iFrameDiv.style.left = "50%";
+        iFrameDiv.style.top = "50%";
+        iFrameDiv.style.transform = "translate(-50%, -50%)";
+    } else {
+        const iFrameHeight = fullH * .94;
+        const iFrameWidth = iFrameHeight * .56;
+        iFrameDiv.style.height = `${iFrameHeight}px`;
+        iFrameDiv.style.width = `${iFrameWidth}px`;
+        iFrameDiv.style.maxHeight = "673px";
+        iFrameDiv.style.maxWidth = "379px";
+
+        // center
+        iFrameDiv.style.left = "50%";
+        iFrameDiv.style.top = "50%";
+        iFrameDiv.style.transform = "translate(-50%, -50%)";
+    }
+}
 
 /*********************************/
 /** End Search Widget creation **/
@@ -677,6 +853,11 @@ function uuidv4() {
         }else{
             gs.user = sessionStorage.getItem(GS_SESSION);
         }
+
+        const iFrameHandler = document.getElementById("i_frame_handler");
+        iFrameHandler.addEventListener("click", () => {
+            bigIFrame();
+        });
     };
 
     gs.save = function(){
